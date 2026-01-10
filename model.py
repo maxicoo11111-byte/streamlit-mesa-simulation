@@ -1,4 +1,9 @@
-import mesa
+#import mesa
+from mesa import Agent, Model
+from mesa.time import RandomActivation # или StagedActivation, в зависимости от вашей модели
+from mesa.datacollection import DataCollector
+
+
 import random
 
 class Household(mesa.Agent):
