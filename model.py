@@ -5,20 +5,14 @@ from mesa.datacollection import DataCollector
 
 class PersonAgent(Agent):
     """Агент-физлицо с доходом и налоговой ставкой."""
-    # 1. УБИРАЕМ 'unique_id' ИЗ АРГУМЕНТОВ __init__
     def __init__(self, model, initial_wealth):
-        # 2. ВЫЗЫВАЕМ super().__init__ ТОЛЬКО С 'model'.
-        # Mesa сама присвоит уникальный ID.
+        # Mesa 3.0+ автоматически управляет unique_id
         super().__init__(model)
         self.wealth = initial_wealth
-        # Доход агента на каждом шаге
         self.income = self.random.uniform(0.5, 1.5) * (initial_wealth or 1)
 
     def step(self):
-        """
-        На каждом шаге агент зарабатывает доход и платит налог.
-        Этот метод будет вызван командой model.agents.shuffle_do("step").
-        """
+        """На каждом шаге агент зарабатывает доход и платит налог."""
         tax_paid = self.income * self.model.tax_rate
         self.wealth += self.income - tax_paid
         self.model.government_revenue += tax_paid
@@ -36,9 +30,9 @@ class EconomicModel(Model):
 
         # Создание агентов и добавление их в модель
         for i in range(self.num_agents):
-            # 3. СОЗДАЕМ АГЕНТА, НЕ ПЕРЕДАВАЯ ЕМУ ID
             a = PersonAgent(self, initial_wealth_per_capita)
-            self.add_agent(a)
+            # ИСПРАВЛЕНИЕ: Используем self.agents.append() вместо self.add_agent()
+            self.agents.append(a)
 
         # DataCollector остается таким же
         self.datacollector = DataCollector(
