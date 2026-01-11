@@ -36,7 +36,7 @@ class EconomicModel(Model):
         # Создание агентов и добавление их в модель
         for i in range(self.num_agents):
             # Создаем агента
-            a = PersonAgent(self.next_id(), self, initial_wealth_per_capita)
+            a = PersonAgent(i, self, initial_wealth_per_capita) # <--- ИСПРАВЛЕНО
             # Добавляем агента в AgentSet модели (вместо self.schedule.add)
             self.add_agent(a)
 
