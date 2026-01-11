@@ -11,26 +11,27 @@ st.sidebar.header("Параметры симуляции")
 
 # Инициализация модели при первом запуске
 if 'model' not in st.session_state:
+    # Используем правильные имена аргументов: N и gdp
     st.session_state['model_params'] = {
-        'N_households': st.sidebar.slider("Количество домохозяйств", 1, 50, 10),
-        'N_firms': st.sidebar.slider("Количество фирм", 1, 10, 3),
-        'tax_rate': st.sidebar.slider("Налоговая ставка", 0.0, 1.0, 0.2, 0.01),
-        'firm_salary': st.sidebar.slider("Зарплата от фирм", 10, 100, 50),
-        'gov_spending_ratio': st.sidebar.slider("Доля расходов бюджета", 0.0, 1.0, 0.1, 0.01)
+        'N': st.sidebar.slider("Количество агентов (N)", 1, 200, 50),
+        'gdp': st.sidebar.number_input("Начальный ВВП (GDP)", value=1000),
+        'tax_rate': st.sidebar.slider("Налоговая ставка", 0.0, 1.0, 0.1, 0.01)
     }
     # Создаем экземпляр модели и сохраняем его в session_state
     st.session_state['model'] = EconomicModel(**st.session_state['model_params'])
 else:
     # Если модель уже существует, просто отображаем слайдеры с текущими значениями
-    # и обновляем параметры модели, если пользователь их изменил
     current_params = st.session_state['model_params']
     new_params = {
-        'N_households': st.sidebar.slider("Количество домохозяйств", 1, 50, current_params['N_households']),
-        'N_firms': st.sidebar.slider("Количество фирм", 1, 10, current_params['N_firms']),
-        'tax_rate': st.sidebar.slider("Налоговая ставка", 0.0, 1.0, current_params['tax_rate'], 0.01),
-        'firm_salary': st.sidebar.slider("Зарплата от фирм", 10, 100, current_params['firm_salary']),
-        'gov_spending_ratio': st.sidebar.slider("Доля расходов бюджета", 0.0, 1.0, current_params['gov_spending_ratio'], 0.01)
+        'N': st.sidebar.slider("Количество агентов (N)", 1, 200, current_params['N']),
+        'gdp': st.sidebar.number_input("Начальный ВВП (GDP)", value=current_params['gdp']),
+        'tax_rate': st.sidebar.slider("Налоговая ставка", 0.0, 1.0, current_params['tax_rate'], 0.01)
     }
+    
+    # Применяем измененные параметры к модели
+    st.session_state['model'].tax_rate = new_params['tax_rate']
+    # N и gdp нельзя менять "на лету", они используются только при создании модели
+    st.session_state['model_params'] = new_params
     
     # Применяем измененные параметры к модели
     st.session_state['model'].tax_rate = new_params['tax_rate']
