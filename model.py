@@ -32,7 +32,7 @@ class EconomicModel(Model):
         for i in range(self.num_agents):
             a = PersonAgent(self, initial_wealth_per_capita)
             # ИСПРАВЛЕНИЕ: Используем self.agents.append() вместо self.add_agent()
-            self.agents.append(a)
+            #self.agents.append(a) # 
 
         # DataCollector остается таким же
         self.datacollector = DataCollector(
